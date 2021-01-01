@@ -3,8 +3,13 @@
 module.exports = {
     root: true,
     env: { browser: true },
-    extends: '@flybywiresim/eslint-config',
-    plugins: ['@typescript-eslint'],
+    extends: [
+        '@flybywiresim/eslint-config',
+        'plugin:@typescript-eslint/recommended',
+    ],
+    plugins: [
+        '@typescript-eslint',
+    ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 2021,
@@ -48,11 +53,15 @@ module.exports = {
         'no-plusplus': 'off',
         'no-shadow': 'off',
         'no-continue': 'off',
-
+        'no-return-assign': 'off',
         'radix': 'off',
+
+        // buggy
+        'prefer-destructuring': 'off',
 
         // Avoid typescript-eslint conflicts
         'no-unused-vars': 'off',
+        'import/no-unresolved': 'off',
         '@typescript-eslint/no-unused-vars': ['error', {
             vars: 'all',
             varsIgnorePattern: '^_',
