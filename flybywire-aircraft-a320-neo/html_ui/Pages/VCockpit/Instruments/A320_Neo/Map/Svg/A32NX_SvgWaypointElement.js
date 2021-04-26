@@ -122,7 +122,7 @@ class SvgWaypointElement extends SvgMapElement {
         ctx.font = fontSize + "px " + map.config.waypointLabelFontFamily;
         this._textWidth = ctx.measureText(text).width;
         this._textHeight = fontSize * 0.675;
-        const wp = fpm.FlightPlanManager.DEBUG_INSTANCE.getActiveWaypoint();
+        const wp = Fmgc.FlightPlanManager.DEBUG_INSTANCE.getActiveWaypoint();
         const isActiveWaypoint = this.source === wp || (wp && wp.icao === this.source.icao);
         this._refreshLabel(map, isActiveWaypoint);
         this._image = document.createElementNS(Avionics.SVG.NS, "image");
@@ -196,7 +196,7 @@ class SvgWaypointElement extends SvgMapElement {
             this.x = pos.x;
             this.y = pos.y;
         }
-        const wp = fpm.FlightPlanManager.DEBUG_INSTANCE.getActiveWaypoint();
+        const wp = Fmgc.FlightPlanManager.DEBUG_INSTANCE.getActiveWaypoint();
         const isActiveWaypoint = this.source === wp || (wp && wp.icao === this.source.icao);
         if (isActiveWaypoint != this._lastIsActiveWaypoint) {
             this._refreshLabel(map, isActiveWaypoint);
