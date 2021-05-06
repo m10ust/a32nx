@@ -105,7 +105,16 @@ module.exports = getInstrumentsToCompile()
                     plugins: makePostcssPluginList(path),
                     extract: `${TMPDIR}/${name}-gen.css`,
                 }),
-                getTemplatePlugin({ name, path, imports: ['/JS/dataStorage.js'], config, isInstrument }),
+                getTemplatePlugin({
+                    name,
+                    path,
+                    imports: [
+                        '/JS/dataStorage.js',
+                        '/Pages/VCockpit/Instruments/FlightElements/Waypoint.js',
+                    ],
+                    config,
+                    isInstrument,
+                }),
             ],
         };
     });
