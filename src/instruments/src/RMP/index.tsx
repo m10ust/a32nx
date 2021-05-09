@@ -1,6 +1,6 @@
 import './style.scss';
 import React from 'react';
-import { render } from '../Common';
+import { render } from '@instruments/common/index';
 import { RootRadioPanel } from './Components/BaseRadioPanels';
 
 render(

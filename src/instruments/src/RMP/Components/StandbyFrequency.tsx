@@ -1,7 +1,7 @@
 import React, { useCallback, useRef } from 'react';
+import { useInteractionEvent } from '@instruments/common/hooks';
+import { RateMultiplierKnob, UpdateValueCallback } from '@instruments/common/RateMultiplierKnob';
 import { RadioPanelDisplay } from './RadioPanelDisplay';
-import { useInteractionEvent } from '../../Common/hooks';
-import { RateMultiplierKnob, UpdateValueCallback } from '../../Common/RateMultiplierKnob';
 
 declare const Utils; // this can also be replaced once /typings are available
 
