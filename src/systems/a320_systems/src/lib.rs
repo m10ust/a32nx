@@ -7,10 +7,11 @@ mod power_consumption;
 use self::{fuel::A320Fuel, pneumatic::A320PneumaticOverheadPanel};
 
 use electrical::{
-    A320Electrical, A320ElectricalOverheadPanel, A320EmergencyElectricalOverheadPanel,
+    A320Electrical, A320ElectricalOverheadPanel, A320ElectricalUpdateArguments,
+    A320EmergencyElectricalOverheadPanel,
 };
 
-use hydraulic::{A320Hydraulic, A320HydraulicOverheadPanel};
+use hydraulic::{A320EngineFireOverheadPanel, A320Hydraulic, A320HydraulicOverheadPanel};
 
 use power_consumption::A320PowerConsumption;
 use systems::{
@@ -19,7 +20,7 @@ use systems::{
         AuxiliaryPowerUnitFireOverheadPanel, AuxiliaryPowerUnitOverheadPanel,
     },
     electrical::{consumption::SuppliedPower, ElectricalSystem, ExternalPowerSource},
-    engine::{leap_engine::LeapEngine, EngineFireOverheadPanel},
+    engine::{leap_engine::LeapEngine, Engine},
     landing_gear::LandingGear,
     simulation::{Aircraft, SimulationElement, SimulationElementVisitor, UpdateContext},
 };
@@ -34,7 +35,7 @@ pub struct A320 {
     fuel: A320Fuel,
     engine_1: LeapEngine,
     engine_2: LeapEngine,
-    engine_fire_overhead: EngineFireOverheadPanel,
+    engine_fire_overhead: A320EngineFireOverheadPanel,
     electrical: A320Electrical,
     power_consumption: A320PowerConsumption,
     ext_pwr: ExternalPowerSource,
@@ -54,7 +55,7 @@ impl A320 {
             fuel: A320Fuel::new(),
             engine_1: LeapEngine::new(1),
             engine_2: LeapEngine::new(2),
-            engine_fire_overhead: EngineFireOverheadPanel::new(),
+            engine_fire_overhead: A320EngineFireOverheadPanel::new(),
             electrical: A320Electrical::new(),
             power_consumption: A320PowerConsumption::new(),
             ext_pwr: ExternalPowerSource::new(),
@@ -90,12 +91,18 @@ impl Aircraft for A320 {
             &self.ext_pwr,
             &self.electrical_overhead,
             &self.emergency_electrical_overhead,
-            &mut self.apu,
-            &self.apu_overhead,
-            &self.engine_fire_overhead,
-            [&self.engine_1, &self.engine_2],
-            &self.hydraulic,
-            &self.landing_gear,
+            &mut A320ElectricalUpdateArguments::new(
+                [self.engine_1.corrected_n2(), self.engine_2.corrected_n2()],
+                [
+                    self.electrical_overhead.idg_1_push_button_released(),
+                    self.electrical_overhead.idg_2_push_button_released(),
+                ],
+                &mut self.apu,
+                self.hydraulic.is_blue_pressurised(),
+                self.apu_overhead.master_is_on(),
+                self.apu_overhead.start_is_on(),
+                self.landing_gear.is_up_and_locked(),
+            ),
         );
 
         self.apu.update_after_electrical();
