@@ -5,7 +5,6 @@ const fs = require('fs');
 const image = require('@rollup/plugin-image');
 const { babel } = require('@rollup/plugin-babel');
 const { typescriptPaths } = require('rollup-plugin-typescript-paths');
-const sucrase = require('@rollup/plugin-sucrase');
 const { nodeResolve } = require('@rollup/plugin-node-resolve');
 const commonjs = require('@rollup/plugin-commonjs');
 const replace = require('@rollup/plugin-replace');
@@ -102,7 +101,10 @@ module.exports = getInstrumentsToCompile()
                     compact: false,
                     extensions,
                 }),
-                typescriptPaths({ tsConfigPath: `${__dirname}/../tsconfig.json` }),
+                typescriptPaths({
+                    tsConfigPath: `${__dirname}/../tsconfig.json`,
+                    preserveExtensions: true,
+                }),
                 replace({ 'process.env.NODE_ENV': '"production"' }),
                 postcss({
                     use: { sass: {} },
